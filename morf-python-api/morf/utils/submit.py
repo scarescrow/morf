@@ -24,8 +24,20 @@ Helper functions for job submission to the MORF platform.
 """
 
 import requests
+import os
+
+# In case a developer wants to use his own SQS queue,
+# the following key can be added to the system environment
+SQS_DEBUG_KEY = "MORF_SQS_URL"
 
 SQS_QUEUE_URL = "https://dcd97aapz1.execute-api.us-east-1.amazonaws.com/dev/morf/"
+
+# If the key exists in the system environment, use the value
+# of that or the SQS URL
+
+if SQS_DEBUG_KEY in os.environ and os.environ[SQS_DEBUG_KEY] != "":
+    SQS_QUEUE_URL = os.environ[SQS_QUEUE_URL]
+
 MWE_CONFIG_URL = "https://raw.githubusercontent.com/educational-technology-collective/morf/master/mwe/client.config"
 
 def easy_submit(client_config_url, email_to):
