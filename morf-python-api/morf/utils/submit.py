@@ -36,7 +36,7 @@ SQS_QUEUE_URL = "https://dcd97aapz1.execute-api.us-east-1.amazonaws.com/dev/morf
 # of that or the SQS URL
 
 if SQS_DEBUG_KEY in os.environ and os.environ[SQS_DEBUG_KEY] != "":
-    SQS_QUEUE_URL = os.environ[SQS_QUEUE_URL]
+    SQS_QUEUE_URL = os.environ[SQS_DEBUG_KEY]
 
 MWE_CONFIG_URL = "https://raw.githubusercontent.com/educational-technology-collective/morf/master/mwe/client.config"
 
