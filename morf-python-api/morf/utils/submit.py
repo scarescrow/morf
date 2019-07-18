@@ -53,6 +53,25 @@ def easy_submit(client_config_url, email_to):
     print(r.text)
     return
 
+def submit_raw_files(container, config, email_to):
+    """
+    Submit a job to the MORF platform with raw files.
+    :param container: raw containerized docker file
+    :param email_to: email address to receive job notifications.
+    :param config: raw config file
+    :return:
+    """
+    files = {
+        "container": container
+    }
+    params = {
+        "config": config.read(),
+        "email_to": email_to
+    }
+    r = requests.post(SQS_QUEUE_URL, files=files, data=params)
+    print(r.text)
+    return
+
 
 def submit_mwe(email_to):
     easy_submit(MWE_CONFIG_URL, email_to)
