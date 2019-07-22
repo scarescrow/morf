@@ -26,17 +26,7 @@ Helper functions for job submission to the MORF platform.
 import requests
 import os
 
-# In case a developer wants to use his own SQS queue,
-# the following key can be added to the system environment
-SQS_DEBUG_KEY = "MORF_SQS_URL"
-
 SQS_QUEUE_URL = "https://dcd97aapz1.execute-api.us-east-1.amazonaws.com/dev/morf/"
-
-# If the key exists in the system environment, use the value
-# of that or the SQS URL
-
-if SQS_DEBUG_KEY in os.environ and os.environ[SQS_DEBUG_KEY] != "":
-    SQS_QUEUE_URL = os.environ[SQS_DEBUG_KEY]
 
 MWE_CONFIG_URL = "https://raw.githubusercontent.com/educational-technology-collective/morf/master/mwe/client.config"
 
@@ -53,22 +43,28 @@ def easy_submit(client_config_url, email_to):
     print(r.text)
     return
 
-def submit_raw_files(container, config, email_to):
+def submit_raw_files(container, config, email_to, server_url=None):
     """
     Submit a job to the MORF platform with raw files.
     :param container: raw containerized docker file
     :param email_to: email address to receive job notifications.
     :param config: raw config file
+    :param sqs_queue_url: A custom server URL in case a developer 
+                        wants to send messages there
     :return:
     """
     files = {
         "container": container
     }
-    params = {
+    data = {
         "config": config.read(),
         "email_to": email_to
     }
-    r = requests.post(SQS_QUEUE_URL, files=files, data=params)
+
+    if server_url:
+        SQS_QUEUE_URL = server_url
+
+    r = requests.post(SQS_QUEUE_URL, files=files, params=data)
     print(r.text)
     return
 
